@@ -1,0 +1,101 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>{{ bid.listingId.title }}</h2>
+
+        <hr class="my-4">
+        {{ message }}
+        {% if user.is_authenticated %}
+            <form action="{% url 'watchlist' %}" method="post">
+                {% csrf_token %}
+                <input hidden value="{{ entry.id }}" name="listing" />
+                <button type="submit" class="btn btn-primary btn-sm">{{ watchlist }}</button>
+            </form>
+        {% endif %}
+        <div>
+            <div class="row">
+                <div class="col-sm">
+                <img src="{{ entry.picture }}" class="rounded float-left" alt="{{ entry.title }}" style="width:300px;height:300px;" />
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="col-md-6">
+                <div class="row"><b>Category:&nbsp;</b> {{ entry.category }}</div>
+                <div class="row"><b>Description:&nbsp;</b> {{ entry.description }}</div>
+                <div class="row"><b>Current Price:&nbsp;</b>${{ bid.currentPrice }}</div>
+            </div>
+        </div>
+        <hr class="my-4">
+        <div class="row">
+            {% if user.is_authenticated %}
+                <div class="col-sm">
+                    <form action="{%url 'newbid' %}" method="post">
+                        {% csrf_token %}
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Place Bid" aria-label="bid" aria-describedby="button-addon2" name="newbid">
+                            <input hidden value="{{ bid.listingId.title }}" name="title" />
+                            <input hidden value="{{ bid.id }}" name="bidid" />
+                            <input hidden value="{{ bid.currentPrice }}" name="currentprice" />
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-sm">
+                    <form action="{%url 'close' %}" method="post">
+                        {% csrf_token %}
+                        <input hidden value="{{ bid.listingId.title }}" name="title" />
+                        <input hidden value="{{ bid.listingId.id }}" name="listid" />
+                        <input hidden value="{{ bid.highestBidder.username }}" name="winner" />
+                        <input hidden value="{{ bid.listingId.creator }}" name="creator" />
+                        <button type="submit" class="btn btn-warning">Close Listing</button>
+                    </form>
+                </div>
+            {% endif %}
+            <div class="col-sm">
+
+            </div>
+            <div class="col-sm">
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                <h3>Comments:</h3>
+            </div>
+        </div>
+        <div class="row">
+            {% if user.is_authenticated %}
+                <div class="col-sm">
+                    <div class="form-group">
+                        <form method="POST" action="{% url 'comment' %}">
+                            {% csrf_token %}
+                            <label for="commentArea">Enter Your Comment:</label>
+                            <textarea class="form-control" name="newcomment" id="commentArea" rows="3"></textarea>
+                            <input hidden value="{{ bid.listingId.id }}" name="listingid" />
+                            <button type="submit" class="btn btn-secondary btn-sm">Post Comment</button>
+                        </form>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        {% for item in comments %}
+
+            <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="col-sm">
+                        <div><b>{{ item.user.username }}:</b></div>
+                    </div>
+                    <div class=" col-sm">
+                        <div class="card-body">
+                            {{ item.comment }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        {% endfor %}
+{% endblock %}

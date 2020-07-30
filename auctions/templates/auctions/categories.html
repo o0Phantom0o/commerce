@@ -1,0 +1,15 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Categories:</h2>
+
+        <hr class="my-4">
+        {{ message }}
+
+        {% for item in list %}
+            <hr class="my-4">
+            <h5><li><a href="category/{{ item.category }}">{{ item.category }}</a></li></h5>
+
+        {% endfor %}
+        
+{% endblock %}

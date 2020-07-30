@@ -1,0 +1,24 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Active Listings</h2>
+
+    {% for entry in bids %}
+        {% if entry.listingId.status == "a" %}
+            <hr class="my-4">
+            <div><h4><a href="listings/{{ entry.listingId.id }}">{{ entry.listingId.title }}</a></h4></div>
+            <div class="row">
+                <div class="col-md-3">
+                    <img src="{{ entry.listingId.picture }}" alt="{{ entry.listingId.title }}" style="width:150px;height:150px;" />
+                </div>
+                <div class="col-md-4">
+                    <div class="row"><b>Category:&nbsp;</b> {{ entry.listingId.category }}</div>
+                    <div class="row"><b>Current Price:&nbsp;</b>${{ entry.currentPrice }}</div>
+                    <div class="row"><b>Description:&nbsp;</b> {{ entry.listingId.description }} </div>
+
+                </div>
+        {% endif %}
+        </div>
+        <hr class="my-4">
+    {% endfor %}
+{% endblock %}
